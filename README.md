@@ -1,10 +1,6 @@
-# Material from CEMC18 Presentation - Data Visualization in the Classroom
+# Material from Conference Presentations
 
-The presentation materials from my talk at CEMC18.  Unfortunately, some of the interesting visualizations from the presentation had to be removed and please not some of the alterations to the data sets.
-
-## Presentation Link
-
-https://bit.ly/2w7OHvC
+Sports analytics as a context for computational thinking. 
 
 ## Data Sets
 
