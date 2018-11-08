@@ -1,0 +1,44 @@
+abTotal,abCount,result,type,pdes,px,pz
+3,1,Flyout,B,Ball,-1.387217448,2.143887405
+3,2,Flyout,B,Ball,0.281062325,0.932391624
+3,3,Flyout,X,In play out(s),-0.524409375,2.23500503
+1,1,Flyout,X,In play out(s),-0.246200733,1.870451345
+6,1,Strikeout,S,Called Strike,-0.353819591,1.891906959
+6,2,Strikeout,S,Called Strike,0.14869565,1.705230007
+6,3,Strikeout,B,Ball,1.281062271,1.625878526
+6,4,Strikeout,B,Ball,0.880027824,1.121411212
+6,5,Strikeout,B,Ball,0.50988146,0.18549453
+6,6,Strikeout,S,Called Strike,-0.663656474,1.620717293
+3,1,Strikeout,S,Called Strike,-0.306115035,3.340890323
+3,2,Strikeout,S,Swinging Strike,-0.467742915,2.779664839
+3,3,Strikeout,S,Swinging Strike (Blocked),-1.028550062,0.925245405
+1,1,Single,X,In play no out,0.332474123,2.50989833
+5,1,Groundout,S,Called Strike,-0.163890994,2.505529314
+5,2,Groundout,B,Ball In Dirt,0.194135111,0.59649738
+5,3,Groundout,S,Called Strike,-0.583208914,1.608621039
+5,4,Groundout,B,Ball,-0.519349916,0.57728831
+5,5,Groundout,X,In play out(s),0.330679515,3.69862045
+2,1,Flyout,S,Called Strike,-0.939622227,1.359333865
+2,2,Flyout,X,In play (out),-0.339699621,2.829438018
+4,1,Strikeout,S,Called Strike,-0.413278658,2.746596921
+4,2,Strikeout,S,Foul,-0.832194265,2.419009562
+4,3,Strikeout,S,Foul,1.110996434,2.761838665
+4,4,Strikeout,S,Swinging Strike,-0.438819732,3.27650395
+4,1,Strikeout,S,Foul,-0.35623976,1.624922727
+4,2,Strikeout,S,Called Strike,0.81427621,2.72364186
+4,3,Strikeout,S,Foul,-0.219950144,2.150194639
+4,4,Strikeout,S,Swinging Strike (Blocked),-0.043682265,0.234963506
+2,1,Pop Out,S,Foul,-0.784497463,1.697369808
+2,2,Pop Out,X,In play out(s),-0.829809143,2.929307551
+5,1,Single,S,Called Strike,-0.276028268,3.143617654
+5,2,Single,B,Ball,-0.064033034,1.365222498
+5,3,Single,S,Foul,0.032703503,2.320102771
+5,4,Single,B,Ball,0.669374339,0.363837041
+5,5,Single,X,In play no out,0.529593436,1.770508411
+1,1,Groundout,X,In play out(s),0.58946874,2.051926565
+4,1,Groundout,S,Foul,-0.436705352,2.1923775
+4,2,Groundout,S,Foul,0.183299222,3.051607649
+4,3,Groundout,S,Foul,-0.021491105,2.943288599
+4,4,Groundout,X,In play out(s),-0.131585602,1.815744839
+2,1,Pop Out,S,Called Strike,-0.127593765,2.252725425
+2,2,Pop Out,X,In play out(s),-0.933562334,2.843819708

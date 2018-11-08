@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		
+		<!-- D3.js -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+
+		<!-- Google fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400' rel='stylesheet' type='text/css'>
+
+		<style>
+			#animalSpeeds {
+				text-align: center;
+				font-family: 'Open Sans', sans-serif;
+				font-weight: 400;
+			}
+
+			#animalSpeeds .title {
+			    font-size: 36px;
+			    fill: #4F4F4F;
+			    font-weight: 300;
+			}
+
+			#animalSpeeds .axisTitle {
+				text-anchor: middle;
+				fill: #6B6B6B;
+				font-size: 16px;
+				font-weight: 300;
+			}	
+
+			#animalSpeeds .animalLabel {
+				text-anchor: end;
+				fill: #8C8C8C;
+				font-size: 16px;
+				font-weight: 300;		
+			}
+
+			#animalSpeeds .animalLabel.human {
+				fill: #F92672;	
+			}
+
+			#animalSpeeds .axis path,
+			#animalSpeeds .axis line {
+				fill: none;
+			  	stroke: #C4C4C4;
+			  	stroke-width: 1px;
+			  	shape-rendering: crispEdges;
+			}
+
+			#animalSpeeds .axis text {
+				fill: #8C8C8C;
+				font-size: 14px;
+				font-weight: 300;
+			}
+
+			#animalSpeeds .credit {
+		    	font-size: 14px;
+		    	fill: #AAAAAA;
+		    	font-weight: 300;
+		    	text-anchor: middle;
+		  	}
+		</style>
+
+	</head>	
+	<body>
+
+		<div id="animalSpeeds"></div>
+
+		<script language="javascript" type="text/javascript">
+
+			///////////////////////////////////////////////////////////////////////////
+			//////////////////// Set up and initiate svg containers ///////////////////
+			///////////////////////////////////////////////////////////////////////////	
+
+			var margin = {
+				top: 200,
+				right: 30,
+				bottom: 50,
+				left: 150
+			};
+
+			var width = Math.min(1000, document.getElementById('animalSpeeds').offsetWidth) - margin.left - margin.right - 10,
+				height = width*2/3;//Math.min(window.innerHeight - margin.top - margin.bottom - 20, width*2/3);
+
+			//SVG container
+			var svg = d3.select("#animalSpeeds")
+				.append("svg")
+				.attr("width", width + margin.left + margin.right)
+				.attr("height", height + margin.top + margin.bottom)
+				.on("click", flyOut)
+				.append("g")
+				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+			///////////////////////////////////////////////////////////////////////////
+			//////////////////////////////// Create Data //////////////////////////////
+			///////////////////////////////////////////////////////////////////////////	
+
+			var animals = [
+				{id: 1, animal: 'Cheetah', speed: 120, image: 'cheetah'},
+				{id: 2, animal: 'Horse', speed: 88, image: 'horse'},
+				{id: 3, animal: 'Lion', speed: 80, image: 'lion'},
+				{id: 4, animal: 'Ostrich', speed: 70, image: 'ostrich'},
+				{id: 5, animal: 'Greyhound', speed: 63.5, image: 'greyhound'},
+				{id: 6, animal: 'Grizzly bear', speed: 56, image: 'grizzly_bear'},
+				{id: 7, animal: 'Rabbit', speed: 48, image: 'rabbit'},
+				{id: 8, animal: 'Cat', speed: 48, image: 'cat'},
+				{id: 9, animal: 'Usain Bolt', speed: 45, image: 'human'},
+				{id: 10, animal: 'Squirrel', speed: 20, image: 'squirrel'},
+				{id: 11, animal: 'House mouse', speed: 13, image: 'house_mouse'},
+				{id: 12, animal: 'Luigi HM', speed: 12, image: 'human'},
+				{id: 12, animal: 'Giant tortoise', speed: 0.3, image: 'tortoise'}
+			];
+
+			///////////////////////////////////////////////////////////////////////////
+			//////////////////////////// Create fuzzy filter //////////////////////////
+			///////////////////////////////////////////////////////////////////////////	
+
+			//SVG filter for the fuzzy effect
+			//Code based on http://tympanus.net/codrops/2015/04/08/motion-blur-effect-svg/
+			var defs = svg.append("defs");
+
+			defs.selectAll("filter")
+				.data(animals)
+				.enter().append("filter")
+				.attr("id",function(d,i) { return "motionAnimalFilter-" + d.id; })
+				.attr("width", "500%")	//increase the width of the filter region to remove blur "boundary"
+				.attr("x", "-200%") //make sure the center of the "width" lies in the middle
+				.attr("color-interpolation-filters","sRGB") //to fix safari: http://stackoverflow.com/questions/24295043/svg-gaussian-blur-in-safari-unexpectedly-lightens-image
+				.append("feGaussianBlur")
+				.attr("class", function(d,i) { return "blurValues"; })
+				.attr("in","SourceGraphic")
+				.attr("stdDeviation","0,0");
+
+			///////////////////////////////////////////////////////////////////////////
+			////////////////////////// Create title and credit ////////////////////////
+			///////////////////////////////////////////////////////////////////////////	
+
+			//Title on top
+		    svg.append("text")
+		    	.attr("class", "title")
+		        .attr("x", width/2)
+		        .attr("y", - 120)
+		        .style("text-anchor", "middle")
+		        .text("Top running speeds");
+
+		  	///////////////////////////////////////////////////////////////////////////
+			////////////////////////// Create scales and axes /////////////////////////
+			///////////////////////////////////////////////////////////////////////////	
+		      
+			var axisGroup = svg.append("g").attr("class", "axisWrapper");
+
+			var maxSpeed = d3.max(animals, function(d) { return d.speed; });
+			var kmScale = d3.scale.linear()
+				.range([0, width])
+				.domain([0, maxSpeed]);
+
+			var milesScale = d3.scale.linear()
+				.range([0, width])
+				.domain([0, 0.621371192*d3.max(animals, function(d) { return d.speed; })] );
+
+		    //Bottom x axis
+		    var xAxisBottom = d3.svg.axis()
+		        .scale(kmScale)
+		        .orient("bottom")
+		        .tickFormat(d3.format(".0f"))
+		        //.outerTickSize(0)
+		        .ticks(5);
+			//Add the X bottom Axis
+		    axisGroup.append("g")
+		        .attr("class", "x axis")
+		        .attr("transform", "translate(0," + (height + -15) + ")")
+		        .call(xAxisBottom);
+		    //Append x-axis bottom title
+		    axisGroup.append("text")
+		    	.attr("class", "axisTitle")
+		    	.attr("x", width/2)
+		    	.attr("y", height + 30)
+		    	.text("Speed [km/h]");
+
+		    //Top x axis
+		    var xAxisTop = d3.svg.axis()
+		        .scale(milesScale)
+		        .orient("top")
+		        .ticks(5);
+		    //Add the X top Axis
+		    axisGroup.append("g")
+		        .attr("class", "x axis")
+		        .attr("transform", "translate(0," + -30 + ")")
+		        .call(xAxisTop); 
+		    //Append x-axis top title
+		    axisGroup.append("text")
+		    	.attr("class", "axisTitle")
+		    	.attr("x", width/2)
+		    	.attr("y", -63)
+		    	.text("Speed [mph]");
+
+			///////////////////////////////////////////////////////////////////////////
+			/////////////////////////// Create circles ////////////////////////////////
+			///////////////////////////////////////////////////////////////////////////	
+			
+			var radius = Math.min(8, width/100);
+			
+			//Set up the circle wrapper
+			animalGroups = svg.selectAll(".animalGroups")
+				.data(animals)
+				.enter().append("g")
+				.attr("class", "animalGroups")
+				.attr("transform", function(d,i) { return "translate(0," + i*(height/animals.length) + ")"; });
+
+			//Label at the start
+			animalGroups.append("text")
+				.attr("class", function(d) { return "animalLabel " + d.image; })
+				.attr("x", -40)
+				.attr("dy", "0.3em")
+				.text(function(d) { return d.animal; });
+
+			//Circles
+			animalGroups.append("circle")
+				.attr("class", "animalCircle")
+				.attr("cx", 0)
+				.attr("cy", 0)
+				.attr("r", radius)
+				.style("fill", "#F92672")
+				.style("filter", function(d,i) { return "url(#motionAnimalFilter-" + d.id + ")"; });
+
+
+			///////////////////////////////////////////////////////////////////////////
+			//////////////////// Move the circles outward and in //////////////////////
+			///////////////////////////////////////////////////////////////////////////	
+
+			//Move the circles to their speed and blur them according to how fast they move outward
+			function flyOut() {
+
+				var dur = 1200;
+
+				//Interpolate the fuzzyness
+				d3.selectAll(".blurValues")
+					.transition("fuzzyIn").duration(dur*0.4) //Outward movement
+					//.delay(function(d,i) { return (i+1)*100 + 200; })
+					.delay(1000)
+					.attrTween("stdDeviation", function(d) { 
+						d.maxValue = d.speed * 12 / maxSpeed;
+						return d3.interpolateString("0 0", d.maxValue+" 0"); 
+					})
+				  .transition("fuzzyOut").duration(dur*0.3)
+				  .attrTween("stdDeviation", function(d) { return d3.interpolateString(d.maxValue+" 0", "0 0"); });
+        
+				//Move the circles outward
+				d3.selectAll(".animalCircle")
+					.transition("changeRadius").duration(500)
+					.attr("cx", 0)
+					.transition("moveOut").duration(dur)
+					.delay(800)
+					.attr("cx", function(d,i) { return kmScale(d.speed); });
+
+			}//flyOut
+
+			//Move the circles outward first
+			flyOut();
+
+		</script>
+
+	</body>
+</html>
